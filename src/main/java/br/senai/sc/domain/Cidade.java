@@ -1,17 +1,13 @@
 package br.senai.sc.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.annotation.Generated;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Cidade implements Serializable{
@@ -22,23 +18,21 @@ public class Cidade implements Serializable{
 	private Integer id;
 	private String nome;
 	
-	@ManyToMany
-	@JoinTable(name="CIDADE_ESTADO",
-			joinColumns=@JoinColumn(name="cidade_id"),
-			inverseJoinColumns=@JoinColumn(name="estado_id"))
-	private List<Estado> estados = new ArrayList<>();
-	
+	@ManyToOne
+	@JoinColumn(name = "estado_id")
+	private Estado estado;
 	
 	public Cidade() {
 		super();
 	}
 	
-	public Cidade(Integer id, String nome) {
+	public Cidade(Integer id, String nome, Estado estado) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.estado = estado;
 	}
-
+	
 	public Integer getId() {
 		return id;
 	}

@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Estado implements Serializable{
@@ -20,8 +20,8 @@ public class Estado implements Serializable{
 	private String nome;
 	
 
-	@ManyToMany(mappedBy="estados")
-	private List<Cidade> cidades = new ArrayList<>();
+	@OneToMany(mappedBy="estado")
+	private List<Cidade> cidades = new ArrayList<Cidade>();
 	
 	public Estado() {
 		super();
@@ -33,6 +33,13 @@ public class Estado implements Serializable{
 		this.nome = nome;
 	}
 
+	public List<Cidade> getCidades() {
+		return cidades;
+	}
+
+	public void setCidades(List<Cidade> cidades) {
+		this.cidades = cidades;
+	}
 
 	public Integer getId() {
 		return id;
