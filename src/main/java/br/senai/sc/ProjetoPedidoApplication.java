@@ -1,5 +1,7 @@
 package br.senai.sc;
 
+import java.text.SimpleDateFormat;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -7,13 +9,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.senai.sc.domain.Categoria;
 import br.senai.sc.domain.Cidade;
+import br.senai.sc.domain.Cliente;
 import br.senai.sc.domain.Endereco;
 import br.senai.sc.domain.Estado;
+import br.senai.sc.domain.Pedido;
 import br.senai.sc.domain.Produto;
+import br.senai.sc.domain.enums.TipoCliente;
 import br.senai.sc.repositories.CategoriaRepository;
 import br.senai.sc.repositories.CidadeRepository;
+import br.senai.sc.repositories.ClienteRepository;
 import br.senai.sc.repositories.EnderecoRepository;
 import br.senai.sc.repositories.EstadoRepository;
+import br.senai.sc.repositories.PedidoRepository;
 import br.senai.sc.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -30,6 +37,10 @@ public class ProjetoPedidoApplication implements CommandLineRunner {
 	private CidadeRepository cidadeRepo;
 	@Autowired
 	private EnderecoRepository enderecoRepo;
+	@Autowired
+	private PedidoRepository pedidoRepo;
+	@Autowired
+	private ClienteRepository clienteRepo;
 	
 	
 	public static void main(String[] args) {
@@ -56,11 +67,6 @@ public class ProjetoPedidoApplication implements CommandLineRunner {
 		p2.getCategorias().add(cat2);
 		p3.getCategorias().add(cat1);
 		
-		categoriaRepo.save(cat1);
-		categoriaRepo.save(cat2);
-		produtoRepo.save(p1);
-		produtoRepo.save(p2);
-		produtoRepo.save(p3);
 
 		Estado est1 = new Estado(null, "Minas Gerais");
 		Estado est2 = new Estado(null, "São Paulo");
@@ -79,10 +85,38 @@ public class ProjetoPedidoApplication implements CommandLineRunner {
 		cidadeRepo.save(c2);
 		cidadeRepo.save(c3);
 
-		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 203", "Jardim", "38220834");
-		Endereco e2 = new Endereco(null, "avenida Matos", "105", "Sala 800", "Centro", "38777012");
+		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 203", "Jardim", "38220834", c1);
+		Endereco e2 = new Endereco(null, "avenida Matos", "105", "Sala 800", "Centro", "38777012", c2);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"));
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"));
+		
+		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA);
+		cli1.getEnderecos().add(e1);
+		cli1.getEnderecos().add(e2);
+
+		cli1.getTelefones().add("27363323");
+		cli1.getTelefones().add("93838393");
+
+		e1.setCliente(cli1);
+		e2.setCliente(cli1);
+		
+		
+		
+		
+		
+		categoriaRepo.save(cat1);
+		categoriaRepo.save(cat2);
+		produtoRepo.save(p1);
+		produtoRepo.save(p2);
+		produtoRepo.save(p3);
+		pedidoRepo.save(ped1);
+		pedidoRepo.save(ped2);
+		clienteRepo.save(cli1);
 		enderecoRepo.save(e1);
 		enderecoRepo.save(e2);
+		
 	}
 
 }

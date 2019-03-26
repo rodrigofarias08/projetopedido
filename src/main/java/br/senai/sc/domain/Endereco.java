@@ -6,8 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.springframework.stereotype.Repository;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Endereco implements Serializable{
@@ -22,10 +23,18 @@ public class Endereco implements Serializable{
 	private String bairro;
 	private String cep;
 	
+	@ManyToOne
+	@JoinColumn(name="cidade_id")
+	private Cidade cidade;
+	
+	@ManyToOne
+	@JoinColumn(name="cliente_id")
+	private Cliente cliente;
+	
 	public Endereco() {
 		super();
 	}
-	public Endereco(Integer id, String logradouro, String numero, String complemento, String bairro, String cep) {
+	public Endereco(Integer id, String logradouro, String numero, String complemento, String bairro, String cep, Cidade cidade) {
 		super();
 		this.id = id;
 		this.logradouro = logradouro;
@@ -33,6 +42,7 @@ public class Endereco implements Serializable{
 		this.complemento = complemento;
 		this.bairro = bairro;
 		this.cep = cep;
+		this.cidade = cidade;
 	}
 	public Integer getId() {
 		return id;
@@ -69,6 +79,21 @@ public class Endereco implements Serializable{
 	}
 	public void setCep(String cep) {
 		this.cep = cep;
+	}
+	
+	
+	
+	public Cidade getCidade() {
+		return cidade;
+	}
+	public void setCidade(Cidade cidade) {
+		this.cidade = cidade;
+	}
+	public Cliente getCliente() {
+		return cliente;
+	}
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 	@Override
 	public int hashCode() {
