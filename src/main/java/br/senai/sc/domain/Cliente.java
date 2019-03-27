@@ -1,5 +1,6 @@
 package br.senai.sc.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -16,7 +17,8 @@ import javax.persistence.OneToMany;
 import br.senai.sc.domain.enums.TipoCliente;
 
 @Entity
-public class Cliente {
+public class Cliente implements Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +34,9 @@ public class Cliente {
 	@ElementCollection
 	@CollectionTable(name="TELEFONES")
 	private Set<String> telefones = new HashSet<>();
+	
+	@OneToMany(mappedBy="cliente")
+	private List<Pedido> pedidos = new ArrayList<>();
 
 	public Cliente() {
 		super();

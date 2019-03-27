@@ -12,14 +12,20 @@ import br.senai.sc.domain.Cidade;
 import br.senai.sc.domain.Cliente;
 import br.senai.sc.domain.Endereco;
 import br.senai.sc.domain.Estado;
+import br.senai.sc.domain.ItemPedido;
+import br.senai.sc.domain.PagamentoComBoleto;
+import br.senai.sc.domain.PagamentoComCartao;
 import br.senai.sc.domain.Pedido;
 import br.senai.sc.domain.Produto;
+import br.senai.sc.domain.enums.EstadoPagamento;
 import br.senai.sc.domain.enums.TipoCliente;
 import br.senai.sc.repositories.CategoriaRepository;
 import br.senai.sc.repositories.CidadeRepository;
 import br.senai.sc.repositories.ClienteRepository;
 import br.senai.sc.repositories.EnderecoRepository;
 import br.senai.sc.repositories.EstadoRepository;
+import br.senai.sc.repositories.ItemPedidoRepository;
+import br.senai.sc.repositories.PagamentoRepository;
 import br.senai.sc.repositories.PedidoRepository;
 import br.senai.sc.repositories.ProdutoRepository;
 
@@ -41,6 +47,10 @@ public class ProjetoPedidoApplication implements CommandLineRunner {
 	private PedidoRepository pedidoRepo;
 	@Autowired
 	private ClienteRepository clienteRepo;
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepo;
+	@Autowired
+	private PagamentoRepository pagamentoRepo;
 	
 	
 	public static void main(String[] args) {
@@ -79,43 +89,56 @@ public class ProjetoPedidoApplication implements CommandLineRunner {
 		est2.getCidades().add(c2);
 		est2.getCidades().add(c3);
 
-		estadoRepo.save(est1);
-		estadoRepo.save(est2);
-		cidadeRepo.save(c1);
-		cidadeRepo.save(c2);
-		cidadeRepo.save(c3);
-
-		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 203", "Jardim", "38220834", c1);
-		Endereco e2 = new Endereco(null, "avenida Matos", "105", "Sala 800", "Centro", "38777012", c2);
+		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 203", "Jardim", "38220834", c1, null);
+		Endereco e2 = new Endereco(null, "avenida Matos", "105", "Sala 800", "Centro", "38777012", c2, null);
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"));
-		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"));
 		
 		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA);
 		cli1.getEnderecos().add(e1);
 		cli1.getEnderecos().add(e2);
+		
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli1, e2);
 
 		cli1.getTelefones().add("27363323");
 		cli1.getTelefones().add("93838393");
 
 		e1.setCliente(cli1);
 		e2.setCliente(cli1);
+
+		ItemPedido it1 = new ItemPedido(ped1, p1, 0.0, 1, 2000.0);
+		ItemPedido it2 = new ItemPedido(ped1, p3, 0.0, 2, 80.0);
+		ItemPedido it3 = new ItemPedido(ped2, p2, 1000.0, 1, 800.0);
+
+		PagamentoComCartao pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagto1);
 		
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+		PagamentoComBoleto pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf2.parse("20/10/2017"), null);
+		ped2.setPagamento(pagto2);
 		
-		
-		
-		
+		estadoRepo.save(est1);
+		estadoRepo.save(est2);
+		cidadeRepo.save(c1);
+		cidadeRepo.save(c2);
+		cidadeRepo.save(c3);
 		categoriaRepo.save(cat1);
 		categoriaRepo.save(cat2);
 		produtoRepo.save(p1);
 		produtoRepo.save(p2);
 		produtoRepo.save(p3);
-		pedidoRepo.save(ped1);
-		pedidoRepo.save(ped2);
 		clienteRepo.save(cli1);
 		enderecoRepo.save(e1);
 		enderecoRepo.save(e2);
+		pedidoRepo.save(ped1);
+		pedidoRepo.save(ped2);
+		itemPedidoRepo.save(it1);
+		itemPedidoRepo.save(it2);
+		itemPedidoRepo.save(it3);
+		pagamentoRepo.save(pagto1);
+		pagamentoRepo.save(pagto2);
 		
 	}
 
